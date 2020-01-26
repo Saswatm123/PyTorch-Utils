@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset as DSMixin
+from torch.utils.data import Dataset as DSMixin, DataLoader
 
 class ShuffleLoader(DSMixin):
     '''
