@@ -10,7 +10,7 @@ class ShuffleLoader(DSMixin):
         self.loader = torch.utils.data.DataLoader(
             dataset = dataset,
             batch_size = batch_size,
-            shuffle = True
+            shuffle = shuffle
         )
         self.dataset = dataset
         self.batch_size = batch_size
