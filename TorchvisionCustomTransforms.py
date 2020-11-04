@@ -7,14 +7,29 @@ class TensorFFT2D:
         Returns 2D FFT of passed in image.
         Assumes passed in image is of shape C*H*W.
     '''
-    def __init__(self, drop_nyquist = True):
+    def __init__(self, drop_nyquist = True, amplitude_only = True, phase_only = False):
         '''
             Args:
                 drop_nyquist:
                     Drops all frequency bins above Nyquist Frequency.
                     Done at last axis.
+                amplitude_only:
+                    Only one of this and phase_only can be True. If True,
+                    returns only the amplitudes at each frequency bin.
+                    If both this and phase_only are False, it returns a
+                    complex Tensor containing the Fourier coefficients of
+                    the image.
+                phase_only:
+                    Only one of this and amplitude_only can be True. If True,
+                    returns only the phase shifts at each frequency bin.
+                    If both this and amplitude_only are False, it returns a
+                    complex Tensor containing the Fourier coefficients of
+                    the image.
         '''
+        assert not (amplitude_only and phase_only), "Both amplitude_only and phase_only are True, only one or less can be True at once"
         self.drop_nyquist = drop_nyquist
+        self.amplitude_only = amplitude_only
+        self.phase_only = phase_only
 
     def __call__(self, image):
         '''
@@ -29,6 +44,10 @@ class TensorFFT2D:
         image = np.fft.fft2(image)
         if self.drop_nyquist:
             image = image[:,:,:int(image.shape[-1]/2) ]
+        if self.amplitude_only:
+            image = np.abs(image)
+        elif self.phase_only:
+            image = np.angle(image)
         return image
 
 class RandomZeroPadding:
